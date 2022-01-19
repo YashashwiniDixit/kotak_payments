@@ -1,0 +1,49 @@
+h3 {
+  text-align: center;
+}
+
+.result {
+  margin-top: 1rem;
+}
+
+.items-list,
+.total {
+  width: 75%;
+  margin: 0 auto;
+}
+
+.items-list {
+  list-style: none;
+  padding: 0;
+}
+
+.items-list li {
+  margin-bottom: 0.5rem;
+}
+
+.items-list-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.items-list li:last-child {
+  border-top: 1px solid #ccc;
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.items-list-item label {
+  vertical-align: text-bottom;
+  margin-left: 0.2rem;
+}
+
+.total {
+  margin-top: 1rem;
+}
+
+@media screen and (max-width: 600px) {
+  .items-list,
+  .total {
+    width: 90%;
+  }
+}

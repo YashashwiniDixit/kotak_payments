@@ -1,9 +1,37 @@
 body {
-  background-color: #f6f9fb!important;
+  background-color: #323832!important;
 }
 .text-small {
   font-size: 0.9rem;
 }
 .rounded {
   border-radius: 1rem;
+}
+.side-by-side{
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  justify-content: center;
+}
+.d1{
+  padding: 2%;
+}
+
+.active{
+  background-color: #dc3545;
+}
+
+
+
+.th{
+  border-color: #dc3545;
+  color: #fff;
+  box-shadow: 0 0 40px 40px #dc3545 inset, 0 0 0 0 #dc3545;
+  transition: all 150ms ease-in-out;
+  margin-left: 0.5em;
+  border-radius: 20px;
+}
+
+input, label {
+  display:block;
 }

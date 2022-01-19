@@ -1,183 +1,254 @@
-import React from "react";
+import React, { useState } from "react";
 import ToggleSwitch from "./components/ToggleSwitch";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
-class Home extends React.Component {
-  render() {
-    return (
-      <div className="maincontainer">
-        <div class="container py-5">
-          <div class="row">
-            <div class="col-lg-7 mx-auto">
-              <div class="bg-white rounded-lg shadow-sm p-5">
-                <h1>Kotak Payments</h1>
-                <hr />
-                <React.Fragment>
-                  <ToggleSwitch label="Enable Voice" />
-                </React.Fragment>
-                <ul
-                  role="tablist"
-                  class="nav bg-light nav-pills rounded-pill nav-fill mb-3"
+import "bootstrap/dist/css/bootstrap.css";
+import Dropdown from "react-bootstrap/Dropdown";
+import CreditTab from "./components/CreditTab";
+import UpiTab from "./components/UpiTab";
+import PaypalTab from "./components/PaypalTab";
+import { useSpeechSynthesis } from "react-speech-kit";
+import { items } from "./utils/items";
+import "./styles.css";
+
+const getFormattedPrice = (price) => `${price.toFixed(2)}`;
+
+function Home() {
+  const [tab, setTab] = useState("");
+  const { speak } = useSpeechSynthesis();
+  const [count, setCount] = useState(0);
+  const [checkedState, setCheckedState] = useState(
+    new Array(items.length).fill(false)
+  );
+
+  const [total, setTotal] = useState(0);
+
+  const handleOnChange = (position) => {
+    const updatedCheckedState = checkedState.map((item, index) =>
+      index === position ? !item : item
+    );
+
+    setCheckedState(updatedCheckedState);
+
+    const totalPrice = updatedCheckedState.reduce(
+      (sum, currentState, index) => {
+        if (currentState === true) {
+          return sum + items[index].price;
+        }
+        return sum;
+      },
+      0
+    );
+
+    setTotal(totalPrice);
+  };
+
+  return (
+    <div classNameName="maincontainer">
+      <div className="container py-5">
+        <div className="row">
+          <div className="col-lg-7 mx-auto">
+            <div className="bg-white rounded-lg shadow-sm p-5">
+              <h1>Kotak Payments</h1>
+              <hr />
+              <React.Fragment>
+                <ToggleSwitch label="Enable Voice" />
+              </React.Fragment>
+              <br />
+
+              <div className="side-by-side">
+                <Dropdown>
+                  <Dropdown.Toggle variant="danger">Currency</Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item href="#">INR</Dropdown.Item>
+                    <Dropdown.Item href="#">USD</Dropdown.Item>
+                    <Dropdown.Item href="#">EUR</Dropdown.Item>
+                    <Dropdown.Item href="#">JPY</Dropdown.Item>
+                    <Dropdown.Item href="#">GBP</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+                <button
+                  className="th"
+                  onClick={() => speak({ text: "Choose the currency" })}
                 >
-                  <li class="nav-item">
-                    <a
-                      data-toggle="pill"
-                      href="#nav-tab-card"
-                      class="nav-link active rounded-pill"
-                    >
-                      <i class="fa fa-credit-card"></i>
-                      Credit Card
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a
-                      data-toggle="pill"
-                      href="#nav-tab-paypal"
-                      class="nav-link rounded-pill"
-                    >
-                      <i class="fa fa-paypal"></i>
-                      Paypal
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a
-                      data-toggle="pill"
-                      href="#nav-tab-bank"
-                      class="nav-link rounded-pill"
-                    >
-                      <i class="fa fa-university"></i>
-                      Bank Transfer
-                    </a>
+                  <i className="fa fa-microphone"></i>
+                </button>
+              </div>
+              <br />
+
+              <div className="App">
+                <div className="side-by-side">
+                  <h3>Select items</h3>
+                  <button
+                    className="th"
+                    onClick={() => speak({ text: "Select items for billing" })}
+                  >
+                    <i className="fa fa-microphone"></i>
+                  </button>
+                </div>
+                <ul className="items-list">
+                  {items.map(({ name, price }, index) => {
+                    return (
+                      <li key={index}>
+                        <div className="items-list-item">
+                          <div className="left-section">
+                            <input
+                              type="checkbox"
+                              id={`custom-checkbox-${index}`}
+                              name={name}
+                              value={name}
+                              checked={checkedState[index]}
+                              onChange={() => handleOnChange(index)}
+                            />
+                            <label htmlFor={`custom-checkbox-${index}`}>
+                              {name}
+                            </label>
+                          </div>
+                          <div className="right-section">
+                            {getFormattedPrice(price)}
+                          </div>
+                        </div>
+                      </li>
+                    );
+                  })}
+                  <li>
+                    <div className="items-list-item">
+                      <div className="left-section">Total:</div>
+                      <div className="right-section">
+                        {getFormattedPrice(total)}
+                      </div>
+                    </div>
                   </li>
                 </ul>
+              </div>
+              <br />
+              <br />
+              <div>
+                <ul
+                  role="tablist"
+                  className="nav bg-light nav-pills rounded-pill nav-fill mb-3"
+                >
+                  <li className="nav-item">
+                    <button
+                      data-toggle="pill"
+                      className={`"nav-link ${
+                        tab === "CC" ? "active" : ""
+                      } rounded-pill`}
+                      onClick={() => setTab("CC")}
+                    >
+                      <i className="fa fa-credit-card"></i>
+                      Credit Card
+                    </button>
+                  </li>
+                  <li className="nav-item">
+                    <button
+                      data-toggle="pill"
+                      className={`"nav-link ${
+                        tab === "PP" ? "active" : ""
+                      } rounded-pill`}
+                      onClick={() => setTab("PP")}
+                    >
+                      <i className="fa fa-paypal"></i>
+                      Paypal
+                    </button>
+                  </li>
+                  <li className="nav-item">
+                    <button
+                      data-toggle="pill"
+                      className={`"nav-link ${
+                        tab === "UP" ? "active" : ""
+                      } rounded-pill`}
+                      onClick={() => setTab("UP")}
+                    >
+                      <i className="fa fa-university"></i>
+                      UPI
+                    </button>
+                  </li>
+                </ul>
+                <button
+                  className="th"
+                  onClick={() => speak({ text: "Choose mode of payment" })}
+                >
+                  <i className="fa fa-microphone"></i>
+                </button>
+              </div>
 
-                <div class="tab-content">
-                  <div id="nav-tab-card" class="tab-pane fade show active">
-                    <p class="alert alert-success">
-                      Some text success or error
-                    </p>
-                    <form>
-                      <div class="form-group">
-                        <label for="username">Full name (on the card)</label>
-                        <input
-                          type="text"
-                          name="username"
-                          placeholder="Jassa"
-                          required
-                          class="form-control"
-                        />
-                      </div>
-                      <div class="form-group">
-                        <label for="cardNumber">Card number</label>
-                        <div class="input-group">
-                          <input
-                            type="text"
-                            name="cardNumber"
-                            placeholder="Your card number"
-                            class="form-control"
-                            required
-                          />
-                          <div class="input-group-append">
-                            <span class="input-group-text text-muted">
-                              <i class="fa fa-cc-visa mx-1"></i>
-                              <i class="fa fa-cc-amex mx-1"></i>
-                              <i class="fa fa-cc-mastercard mx-1"></i>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-sm-8">
-                          <div class="form-group">
-                            <label>
-                              <span class="hidden-xs">Expiration</span>
-                            </label>
-                            <div class="input-group">
-                              <input
-                                type="number"
-                                placeholder="MM"
-                                name=""
-                                class="form-control"
-                                required
-                              />
-                              <input
-                                type="number"
-                                placeholder="YY"
-                                name=""
-                                class="form-control"
-                                required
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-sm-4">
-                          <div class="form-group mb-4">
-                            <label
-                              data-toggle="tooltip"
-                              title="Three-digits code on the back of your card"
-                            >
-                              CVV
-                              <i class="fa fa-question-circle"></i>
-                            </label>
-                            <input type="text" required class="form-control" />
-                          </div>
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        class="subscribe btn btn-primary btn-block rounded-pill shadow-sm"
-                      >
-                        {" "}
-                        Confirm{" "}
-                      </button>
-                    </form>
-                  </div>
+              <div className="tab-content">
+                {tab === "CC" ? (
+                  <CreditTab />
+                ) : tab === "PP" ? (
+                  <PaypalTab />
+                ) : (
+                  <UpiTab />
+                )}
+                <br />
 
-                  <div id="nav-tab-paypal" class="tab-pane fade">
-                    <p>Paypal is easiest way to pay online</p>
-                    <p>
-                      <button
-                        type="button"
-                        class="btn btn-primary rounded-pill"
-                      >
-                        <i class="fa fa-paypal mr-2"></i> Log into my Paypal
-                      </button>
-                    </p>
-                    <p class="text-muted">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua.
-                    </p>
+                <h3>Address</h3>
+                <form>
+                  <div className="form-group">
+                    <label for="address">Street Address Line 1</label>
+                    <input
+                      type="text"
+                      name="address"
+                      required
+                      className="form-control"
+                    />
+                    <label for="address">Street Address Line 2</label>
+                    <input
+                      type="text"
+                      name="username"
+                      required
+                      className="form-control"
+                    />
+                    <label for="address">City</label>
+                    <input
+                      type="text"
+                      name="username"
+                      required
+                      className="form-control"
+                    />
+                    <label for="address">Postal / Zip Code</label>
+                    <input
+                      type="text"
+                      name="username"
+                      required
+                      className="form-control"
+                    />
+                    <label for="address">State/Province</label>
+                    <input
+                      type="text"
+                      name="username"
+                      required
+                      className="form-control"
+                    />
+                    <label for="address">Country</label>
+                    <input
+                      type="text"
+                      name="username"
+                      required
+                      className="form-control"
+                    />
                   </div>
-
-                  <div id="nav-tab-bank" class="tab-pane fade">
-                    <h6>Bank account details</h6>
-                    <dl>
-                      <dt>Bank</dt>
-                      <dd> THE WORLD BANK</dd>
-                    </dl>
-                    <dl>
-                      <dt>Account number</dt>
-                      <dd>7775877975</dd>
-                    </dl>
-                    <dl>
-                      <dt>IBAN</dt>
-                      <dd>CZ7775877975656</dd>
-                    </dl>
-                    <p class="text-muted">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua.
-                    </p>
-                  </div>
-                </div>
+                </form>
+                <br />
+                <button
+                  type="button"
+                  className="subscribe btn btn-primary btn-block rounded-pill shadow-sm"
+                  onClick={() => alert("Payement Success")}
+                >
+                  {" "}
+                  Submit{" "}
+                </button>
+                {/* <div>
+                  <p>Payment success= {count}</p>
+                </div> */}
               </div>
             </div>
           </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 export default Home;
