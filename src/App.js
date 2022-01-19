@@ -17,7 +17,6 @@ const getFormattedPrice = (price) => `${price.toFixed(2)}`;
 function Home() {
   const [tab, setTab] = useState("");
   const { speak } = useSpeechSynthesis();
-  const [count, setCount] = useState(0);
   const [checkedState, setCheckedState] = useState(
     new Array(items.length).fill(false)
   );
