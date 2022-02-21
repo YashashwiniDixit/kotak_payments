@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/kotak_payments/static/css/main.f89fc9c6.css",
+    "main.js": "/kotak_payments/static/js/main.c4cd7635.js",
+    "static/js/787.d312e1ec.chunk.js": "/kotak_payments/static/js/787.d312e1ec.chunk.js",
+    "index.html": "/kotak_payments/index.html",
+    "main.f89fc9c6.css.map": "/kotak_payments/static/css/main.f89fc9c6.css.map",
+    "main.c4cd7635.js.map": "/kotak_payments/static/js/main.c4cd7635.js.map",
+    "787.d312e1ec.chunk.js.map": "/kotak_payments/static/js/787.d312e1ec.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f89fc9c6.css",
+    "static/js/main.c4cd7635.js"
+  ]
+}
